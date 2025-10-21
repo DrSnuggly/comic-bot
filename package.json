@@ -2,7 +2,7 @@
   "name": "comic-bot",
   "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "Send webcomic updates to Discord channels.",
   "type": "module",
   "scripts": {
     "build": "vite build",
