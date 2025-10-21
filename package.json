@@ -1,0 +1,50 @@
+{
+  "name": "comic-bot",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --test-scheduled",
+    "lint": "biome check --fix --unsafe",
+    "lint:ci": "biome ci --error-on-warnings",
+    "start": "wrangler dev --test-scheduled",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage.enabled true",
+    "typecheck": "tsc --build --clean",
+    "typegen": "wrangler types"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "dependencies": {
+    "entities": "^7.0.0",
+    "htmlparser2": "^10.0.0",
+    "zod": "^4.1.9"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.6",
+    "@cloudflare/vite-plugin": "^1.13.2",
+    "@cloudflare/vitest-pool-workers": "^0.9.3",
+    "@vitest/coverage-istanbul": "^3.2.4",
+    "discord-api-types": "^0.38.26",
+    "domutils": "^3.2.2",
+    "type-fest": "^5.1.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "~3.2.4",
+    "wrangler": "^4.38.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  },
+  "keywords": [],
+  "author": "Maia Yeager",
+  "license": "MIT"
+}

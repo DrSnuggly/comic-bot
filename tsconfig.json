@@ -1,0 +1,10 @@
+{
+  "references": [
+    // Keep Cloudflare types separate from root to avoid pollution by @types/node from vite.
+    { "path": "./tsconfig.cf.json" },
+    { "path": "./tsconfig.root.json" },
+    { "path": "./tsconfig.src.json" },
+    { "path": "./tsconfig.test.json" }
+  ],
+  "include": []
+}

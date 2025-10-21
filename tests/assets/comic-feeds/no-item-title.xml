@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Comic Title</title>
+    <description>Comic Description</description>
+    <lastBuildDate>Sun, 14 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <item>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <link>https://localhost/comic</link>
+    </item>
+    <item>
+      <pubDate>Sun, 7 Sep 2025 00:00:00 +0000</pubDate>
+      <link>https://localhost/comic</link>
+    </item>
+  </channel>
+</rss>

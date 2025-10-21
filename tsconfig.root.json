@@ -1,0 +1,6 @@
+{
+  "include": ["*"],
+  "exclude": ["./worker-configuration.d.ts"],
+  "references": [{ "path": "./tsconfig.src.json" }],
+  "extends": "./tsconfig.base.json"
+}

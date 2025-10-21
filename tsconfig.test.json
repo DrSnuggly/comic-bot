@@ -1,0 +1,17 @@
+{
+  "include": ["**/__tests__", "tests"],
+  "references": [{ "path": "./tsconfig.src.json" }],
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": [
+      "@cloudflare/vitest-pool-workers",
+      "vitest/globals",
+      "./worker-configuration.d.ts"
+    ],
+    "paths": {
+      "@tests/*": ["./tests/*"],
+      "@src/*": ["./src/*"]
+    }
+  }
+}

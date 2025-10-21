@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parsing > should parse: 'inline-alt-text.html' 1`] = `
+{
+  "altText": "Alt text.",
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`parsing > should parse: 'inline-nullish-alt-text.html' 1`] = `
+{
+  "altText": undefined,
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`parsing > should parse: 'no-alt-text.html' 1`] = `
+{
+  "altText": undefined,
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`parsing > should parse: 'no-alt-text.html' 2`] = `
+{
+  "altText": undefined,
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`parsing > should parse: 'separate-alt-text.html' 1`] = `
+{
+  "altText": "Alt text.",
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`should parse: 'inline-alt-text.html' 1`] = `
+{
+  "altText": "Alt text.",
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`should parse: 'no-alt-text.html' 1`] = `
+{
+  "altText": undefined,
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`should parse: 'no-alt-text.html' 2`] = `
+{
+  "altText": undefined,
+  "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`should parse: 'separate-alt-text.html' 1`] = `
+{
+  "altText": "Alt text.",
+  "imageUri": "https://localhost/image.png",
+}
+`;

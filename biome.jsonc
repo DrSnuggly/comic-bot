@@ -1,0 +1,115 @@
+{
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+  // Global configuration.
+  "formatter": { "useEditorconfig": true },
+  "linter": {
+    "domains": { "project": "recommended" },
+    "rules": {
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "on",
+        "noExcessiveNestedTestSuites": "on",
+        "noForEach": "on",
+        "noImplicitCoercions": "on",
+        "noUselessStringConcat": "on",
+        "noVoid": "on",
+        "useSimplifiedLogicExpression": "on",
+        "useWhile": "on"
+      },
+      "correctness": {
+        "noGlobalDirnameFilename": "error",
+        "noNodejsModules": "error", // Not available without CF Node.js compat.
+        "noProcessGlobal": "error", // Not available without CF Node.js compat.
+        "useJsonImportAttributes": "on",
+        "useSingleJsDocAsterisk": "on"
+      },
+      "performance": {
+        "noAwaitInLoops": "on",
+        "noDelete": "on",
+        "noDynamicNamespaceImportAccess": "on",
+        "noNamespaceImport": "on",
+        "useTopLevelRegex": "on"
+      },
+      "style": {
+        "noCommonJs": "on",
+        "noDoneCallback": "on",
+        "noInferrableTypes": "on",
+        "noNamespace": "on",
+        "noNegationElse": "on",
+        "noParameterAssign": "on",
+        "noProcessEnv": "on",
+        "noShoutyConstants": "on",
+        "noSubstr": "on",
+        "noUnusedTemplateLiteral": "on",
+        "noUselessElse": "on",
+        "noYodaExpression": "on",
+        "useArrayLiterals": "on",
+        "useAsConstAssertion": "on",
+        "useAtIndex": "on",
+        "useConsistentBuiltinInstantiation": "on",
+        "useDefaultParameterLast": "on",
+        "useEnumInitializers": "on",
+        "useFilenamingConvention": "on",
+        "useGroupedAccessorPairs": "on",
+        "useNumberNamespace": "on",
+        "useNumericSeparators": "on",
+        "useObjectSpread": "on",
+        "useReadonlyClassProperties": "on",
+        "useShorthandAssign": "on",
+        "useSingleVarDeclarator": "on",
+        "useSymbolDescription": "on",
+        "useThrowNewError": "on",
+        "useTrimStartEnd": "on",
+        "useUnifiedTypeSignatures": "on"
+      },
+      "suspicious": {
+        "noBitwiseOperators": "on", // Not required in this project.
+        "noCatchAssign": "on",
+        "noEvolvingTypes": "on",
+        "noVar": "on",
+        "useErrorMessage": "on",
+        "useGuardForIn": "on",
+        "useNumberToFixedDigitsArgument": "on",
+        "useStaticResponseMethods": "on",
+        "useStrictMode": "on",
+        "noFocusedTests": "on",
+        "noSkippedTests": "on"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": { "organizeImports": "on" }
+    }
+  },
+  // Project configuration.
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  // Language configuration.
+  "javascript": {
+    "formatter": { "semicolons": "asNeeded" }
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!worker-configuration.d.ts"]
+  },
+  "overrides": [
+    {
+      "includes": ["tsconfig*.json"],
+      "json": {
+        "parser": { "allowComments": true }
+      }
+    },
+    {
+      "includes": ["**/*.test.*"],
+      "linter": {
+        "rules": {
+          "style": { "useFilenamingConvention": "off" },
+          "suspicious": { "useErrorMessage": "off" }
+        }
+      }
+    }
+  ]
+}
