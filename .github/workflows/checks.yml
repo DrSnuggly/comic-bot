@@ -58,9 +58,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: DrSnuggly/comic-bot
-
-  deploy:
-    uses: ./.github/workflows/deploy.yml
-    needs: [ typecheck, lint, test ]
-    if: ${{ github.ref == 'refs/heads/master' }}
-    secrets: inherit
