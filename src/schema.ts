@@ -5,11 +5,11 @@ export type ComicIndex = z.infer<typeof comicIndexSchema>
 export type ComicIndexItem = ComicIndex[number]
 
 export const comicDataSchema = z.object({
-  altSelector: z.string().min(1).optional(),
-  imageSelector: z.string().min(1),
   name: z.string().min(1),
-  rssUrl: z.url(),
-  webhookUrls: z.url().array(),
+  feedUrl: z.url(),
+  webhooks: z.url().array(),
+  imageSelector: z.string().min(1),
+  altTextSelector: z.string().min(1).optional(),
 })
 export type ComicData = z.infer<typeof comicDataSchema>
 

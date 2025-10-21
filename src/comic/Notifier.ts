@@ -38,14 +38,14 @@ export class Notifier {
    * @param comic - the target comic.
    */
   static async fromData(data: Data, comic: ComicData) {
-    if (!comic.webhookUrls.length) {
+    if (!comic.webhooks.length) {
       throw new NotifierError(comic, "no webhook targets configured")
     }
 
     // Get webhooks that still need updating.
-    const kvKeys = comic.webhookUrls.map((url) => buildCacheKey(url, comic))
+    const kvKeys = comic.webhooks.map((url) => buildCacheKey(url, comic))
     const updateMap = lastUpdateMapSchema.parse(await env.KV.get(kvKeys))
-    const targets = comic.webhookUrls.filter((url) => {
+    const targets = comic.webhooks.filter((url) => {
       const webhookUpdated = updateMap.get(buildCacheKey(url, comic))
       if (!webhookUpdated) return true
       return webhookUpdated < data.feed.dateUpdated

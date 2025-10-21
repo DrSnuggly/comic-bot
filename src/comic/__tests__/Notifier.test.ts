@@ -2,6 +2,7 @@ import { fetchMock, type Interceptable } from "cloudflare:test"
 import { comicData, origin } from "@tests/utils/constants"
 import { fetchAsset } from "@tests/utils/fetchAsset"
 import { getCachedDates } from "@tests/utils/getCachedDates"
+import type { ComicData } from "../../schema"
 import { updateCachedDate } from "../../utils/updateCachedDate"
 import { Feed, type FeedData } from "../Feed"
 import { type Data, Notifier, NotifierError } from "../Notifier"
@@ -45,7 +46,7 @@ afterEach(() => {
 
 describe("targeting", () => {
   it("should reject if no configured webhooks", async () => {
-    const testComic = { ...comicData, webhookUrls: [] }
+    const testComic = { ...comicData, webhooks: [] } satisfies ComicData
 
     const notifier = Notifier.fromData(data, testComic)
 
@@ -57,27 +58,25 @@ describe("targeting", () => {
       (notifier) => notifier.targets,
     )
 
-    await expect(targets).resolves.toEqual(comicData.webhookUrls)
+    await expect(targets).resolves.toEqual(comicData.webhooks)
   })
 
   it("should target all webhooks if all outdated", async () => {
     vi.setSystemTime(weekAgoDate)
     await Promise.all(
-      comicData.webhookUrls.map((webhook) =>
-        updateCachedDate(webhook, comicData),
-      ),
+      comicData.webhooks.map((webhook) => updateCachedDate(webhook, comicData)),
     )
     vi.setSystemTime(nowDate)
     const targets = Notifier.fromData(data, comicData).then(
       (notifier) => notifier.targets,
     )
 
-    await expect(targets).resolves.toEqual(comicData.webhookUrls)
+    await expect(targets).resolves.toEqual(comicData.webhooks)
   })
 
   it("should target only outdated webhooks", async () => {
-    const toTarget = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
-    const toIgnore = [comicData.webhookUrls[1]]
+    const toTarget = [comicData.webhooks[0], comicData.webhooks[2]]
+    const toIgnore = [comicData.webhooks[1]]
 
     vi.setSystemTime(weekAgoDate)
     await Promise.all(
@@ -98,9 +97,7 @@ describe("targeting", () => {
   it("should target nothing if all up-to-date", async () => {
     vi.setSystemTime(hourAgoDate)
     await Promise.all(
-      comicData.webhookUrls.map((webhook) =>
-        updateCachedDate(webhook, comicData),
-      ),
+      comicData.webhooks.map((webhook) => updateCachedDate(webhook, comicData)),
     )
     vi.setSystemTime(nowDate)
     const targets = Notifier.fromData(data, comicData).then(
@@ -113,19 +110,14 @@ describe("targeting", () => {
 
 describe("embeds", () => {
   it("should include alt-text embed if present", () => {
-    const notifier = new Notifier(comicData.webhookUrls, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
 
     expect(notifier.embeds).toMatchSnapshot()
   })
 
   it("should not include alt-text embed if missing", () => {
     const testPage: PageData = { imageUri: page.imageUri }
-    const notifier = new Notifier(
-      comicData.webhookUrls,
-      feed,
-      testPage,
-      comicData,
-    )
+    const notifier = new Notifier(comicData.webhooks, feed, testPage, comicData)
 
     expect(notifier.embeds).toMatchSnapshot()
   })
@@ -133,10 +125,10 @@ describe("embeds", () => {
 
 describe("sending", () => {
   it("should send embeds as body", async () => {
-    const notifier = new Notifier(comicData.webhookUrls, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
     const embeds = notifier.embeds
 
-    for (const webhook of comicData.webhookUrls) {
+    for (const webhook of comicData.webhooks) {
       mockPool
         .intercept({
           path: webhook,
@@ -153,7 +145,7 @@ describe("sending", () => {
   })
 
   it("should only send to targets", async () => {
-    const toTarget = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
+    const toTarget = [comicData.webhooks[0], comicData.webhooks[2]]
     const notifier = new Notifier(toTarget, feed, page, comicData)
 
     for (const webhook of toTarget) {
@@ -164,36 +156,36 @@ describe("sending", () => {
   })
 
   it("should update cached dates", async () => {
-    const notifier = new Notifier(comicData.webhookUrls, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
 
-    for (const webhook of comicData.webhookUrls) {
+    for (const webhook of comicData.webhooks) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(200)
     }
 
     await expect(notifier.send()).resolves.toBe(undefined)
     const cache = await getCachedDates()
-    expect(cache.size).toBe(comicData.webhookUrls.length)
+    expect(cache.size).toBe(comicData.webhooks.length)
     for (const value of cache.values()) {
       expect(value).toEqual(nowDate)
     }
   })
 
   it("should re-throw request failures", async () => {
-    const notifier = new Notifier(comicData.webhookUrls, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
 
-    for (const webhook of comicData.webhookUrls) {
+    for (const webhook of comicData.webhooks) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(400)
     }
 
     await expect(notifier.send()).rejects.toMatchObject(
-      comicData.webhookUrls.map(() => expect.any(NotifierError)),
+      comicData.webhooks.map(() => expect.any(NotifierError)),
     )
   })
 
   it("should only update cached dates if request is ok", async () => {
-    const toSucceed = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
-    const toFail = [comicData.webhookUrls[1]]
-    const notifier = new Notifier(comicData.webhookUrls, feed, page, comicData)
+    const toSucceed = [comicData.webhooks[0], comicData.webhooks[2]]
+    const toFail = [comicData.webhooks[1]]
+    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
 
     for (const webhook of toSucceed) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(200)

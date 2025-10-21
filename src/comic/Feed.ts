@@ -30,7 +30,7 @@ export class Feed implements FeedData {
    * @throws FeedError if feed cannot be retrieved.
    */
   static async fromComic(comic: ComicData): Promise<Feed> {
-    const response = await fetch(comic.rssUrl)
+    const response = await fetch(comic.feedUrl)
     return Feed.fromResponse(response, comic)
   }
 

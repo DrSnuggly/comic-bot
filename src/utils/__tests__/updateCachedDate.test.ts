@@ -11,7 +11,7 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 it("should set the current date as an ISO string", async () => {
-  const webhook = comicData.webhookUrls[0]
+  const webhook = comicData.webhooks[0]
 
   await updateCachedDate(webhook, comicData)
   const cache = await getCachedDates()

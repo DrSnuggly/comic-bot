@@ -11,14 +11,14 @@ export class Comic implements ComicData {
   get imageSelector() {
     return this.data.imageSelector
   }
-  get altSelector() {
-    return this.data.altSelector
+  get altTextSelector() {
+    return this.data.altTextSelector
   }
-  get rssUrl() {
-    return this.data.rssUrl
+  get feedUrl() {
+    return this.data.feedUrl
   }
-  get webhookUrls() {
-    return this.data.webhookUrls
+  get webhooks() {
+    return this.data.webhooks
   }
 
   constructor(private readonly data: ComicData) {}

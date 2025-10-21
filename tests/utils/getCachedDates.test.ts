@@ -12,14 +12,12 @@ it("should return empty map if nothing cached", async () => {
 
 it("should parse and return cache", async () => {
   await Promise.all(
-    comicData.webhookUrls.map((webhook) =>
-      updateCachedDate(webhook, comicData),
-    ),
+    comicData.webhooks.map((webhook) => updateCachedDate(webhook, comicData)),
   )
   const cachePromise = getCachedDates()
 
   await expect(cachePromise).resolves.toMatchObject({
-    size: comicData.webhookUrls.length,
+    size: comicData.webhooks.length,
   })
 })
 
@@ -28,13 +26,11 @@ it("should ignore index", async () => {
 
   await env.KV.put(KV_INDEX_KEY, JSON.stringify(indexData))
   await Promise.all(
-    comicData.webhookUrls.map((webhook) =>
-      updateCachedDate(webhook, comicData),
-    ),
+    comicData.webhooks.map((webhook) => updateCachedDate(webhook, comicData)),
   )
   const cachePromise = getCachedDates()
 
   await expect(cachePromise).resolves.toMatchObject({
-    size: comicData.webhookUrls.length,
+    size: comicData.webhooks.length,
   })
 })

@@ -52,8 +52,8 @@ describe("index parsing", () => {
 
 describe("processing", () => {
   it("should collect sub-errors", async () => {
-    const toSucceed = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
-    const toFail = [comicData.webhookUrls[1]]
+    const toSucceed = [comicData.webhooks[0], comicData.webhooks[2]]
+    const toFail = [comicData.webhooks[1]]
     const indexData = [comicData]
 
     // KV setup.
@@ -81,8 +81,8 @@ describe("processing", () => {
   })
 
   it("should combine sub-errors with top-level errors", async () => {
-    const toSucceed = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
-    const toFail = [comicData.webhookUrls[1]]
+    const toSucceed = [comicData.webhooks[0], comicData.webhooks[2]]
+    const toFail = [comicData.webhooks[1]]
     const { name: _, ...badComicData } = comicData
     const indexData = [badComicData, comicData]
 

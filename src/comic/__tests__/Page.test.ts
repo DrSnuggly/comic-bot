@@ -37,9 +37,9 @@ describe("parsing", () => {
     { pageAsset: "inline-alt-text.html" },
     { pageAsset: "inline-nullish-alt-text.html" },
     { pageAsset: "no-alt-text.html" },
-    { pageAsset: "no-alt-text.html", altSelector: "#does-not-exist" },
-    { pageAsset: "separate-alt-text.html", altSelector: "#alt-text" },
-  ] satisfies (Pick<ComicData, "altSelector"> & { pageAsset: string })[])(
+    { pageAsset: "no-alt-text.html", altTextSelector: "#does-not-exist" },
+    { pageAsset: "separate-alt-text.html", altTextSelector: "#alt-text" },
+  ] satisfies (Pick<ComicData, "altTextSelector"> & { pageAsset: string })[])(
     "should parse: $pageAsset",
     async ({ pageAsset, ...rest }) => {
       const assetPath = `comic-pages/${pageAsset}`

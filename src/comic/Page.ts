@@ -90,8 +90,8 @@ export class Page implements PageData {
     }
 
     let parser = rewriter.on(comic.imageSelector, handler)
-    if (comic.altSelector) {
-      parser = parser.on(comic.altSelector, handler)
+    if (comic.altTextSelector) {
+      parser = parser.on(comic.altTextSelector, handler)
     }
     await parser.transform(response).text()
     if (imageUri === undefined) {

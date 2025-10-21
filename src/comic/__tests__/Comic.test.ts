@@ -17,7 +17,7 @@ afterEach(() => fetchMock.assertNoPendingInterceptors())
 it("should match properties from data", () => {
   const testComicData = {
     ...comicData,
-    altSelector: "#alt-text",
+    altTextSelector: "#alt-text",
   } satisfies ComicData
   const comic = new Comic(testComicData)
 
@@ -35,7 +35,7 @@ it("should resolve when processing", async () => {
   mockPool
     .intercept({ path: comicUrl.pathname })
     .reply(200, await pageAsset.text())
-  for (const webhook of comicData.webhookUrls) {
+  for (const webhook of comicData.webhooks) {
     mockPool.intercept({ path: webhook, method: "post" }).reply(200)
   }
 

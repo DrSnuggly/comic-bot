@@ -8,8 +8,8 @@ export const webhookUrl = new URL(`${origin}/webhook`)
 export const comicData = {
   name: "Test Comic",
   imageSelector: "img#comic",
-  rssUrl: feedUrl.href,
-  webhookUrls: [
+  feedUrl: feedUrl.href,
+  webhooks: [
     `${webhookUrl.href}-0`,
     `${webhookUrl.href}-1`,
     `${webhookUrl.href}-2`,

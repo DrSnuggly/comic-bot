@@ -6,5 +6,5 @@ import type { ComicData } from "../schema"
  * @param comic - the target comic.
  */
 export function buildCacheKey(url: string, comic: ComicData): string {
-  return `${comic.rssUrl}|${url}`
+  return `${comic.feedUrl}|${url}`
 }

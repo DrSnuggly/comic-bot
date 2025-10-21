@@ -21,8 +21,8 @@ beforeAll(() => {
 afterEach(() => fetchMock.assertNoPendingInterceptors())
 
 it("should complete schedule successfully", async () => {
-  const toSucceed = [comicData.webhookUrls[0], comicData.webhookUrls[2]]
-  const toFail = [comicData.webhookUrls[1]]
+  const toSucceed = [comicData.webhooks[0], comicData.webhooks[2]]
+  const toFail = [comicData.webhooks[1]]
   const { name: _, ...badComicData } = comicData
   const indexData = [badComicData, comicData]
   const consoleSpy = vi
