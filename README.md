@@ -14,7 +14,7 @@ can [sign up for one for free](https://dash.cloudflare.com/sign-up).
 1. Log into Cloudflare.
 2. Click the button below on this page:
 
-   [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=<your git repo URL>)
+   [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/DrSnuggly/comic-bot)
 3. Follow the remaining instructions provided by Cloudflare.
 
 ## Configure
