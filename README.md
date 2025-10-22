@@ -74,5 +74,5 @@ can [sign up for one for free](https://dash.cloudflare.com/sign-up).
       ```
 3. In the Cloudflare KV storage attached to this worker, add a new entry with
    the following:
-   - **Key**: `index`
-   - **Value**: use the value from step 2.
+    - **Key**: `index`
+    - **Value**: use the value from step 2.
