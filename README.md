@@ -76,3 +76,20 @@ can [sign up for one for free](https://dash.cloudflare.com/sign-up).
    the following:
     - **Key**: `index`
     - **Value**: use the value from step 2.
+
+## Local development
+
+1. Install [pnpm](https://pnpm.io/installation).
+    - If Node.js also needs to be installed, you can use the following command:
+      ```shell
+      pnpm env use --global lts
+      ```
+2. Install dependencies with:
+   ```shell
+   pnpm install --frozen-lockfile
+   ```
+   
+## Reference
+
+- [Cloudflare Workers's `scheduled()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/)
+- [Cloudflare Workers and Vite](https://developers.cloudflare.com/workers/vite-plugin/)
