@@ -112,6 +112,7 @@ export class Notifier {
   protected async sendUpdate(url: string, embeds: APIEmbed[]) {
     const response = await fetch(url, {
       method: "post",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         embeds,
         username: env.DISCORD_USERNAME,
