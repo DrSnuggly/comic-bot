@@ -18,6 +18,43 @@ exports[`embeds > should include alt-text embed if present 1`] = `
 ]
 `;
 
+exports[`embeds > should include embeds from multiple pages 1`] = `
+[
+  {
+    "author": {
+      "name": "Comic Title",
+    },
+    "description": "Page 1",
+    "image": {
+      "url": "https://localhost/image-start.png",
+    },
+    "title": "Comic 1",
+    "url": "https://localhost/comic",
+  },
+  {
+    "description": "Alt text: ||Alt text start.||",
+  },
+  {
+    "description": "Page 2",
+    "image": {
+      "url": "https://localhost/image-next.png",
+    },
+  },
+  {
+    "description": "Alt text: ||Alt text next.||",
+  },
+  {
+    "description": "Page 3",
+    "image": {
+      "url": "https://localhost/image-end.png",
+    },
+  },
+  {
+    "description": "Alt text: ||Alt text end.||",
+  },
+]
+`;
+
 exports[`embeds > should not include alt-text embed if missing 1`] = `
 [
   {

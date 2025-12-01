@@ -13,7 +13,7 @@ import type { PageData } from "./Page"
 
 export type Data = {
   feed: FeedData
-  page: PageData
+  pages: PageData[]
 }
 
 export class NotifierError extends ComicError {}
@@ -22,13 +22,13 @@ export class Notifier {
   /**
    * @param targets - the webhooks to update.
    * @param feed - the feed data to use.
-   * @param page - the page data to use.
+   * @param pages - the page data to use.
    * @param comic - the target comic.
    */
   constructor(
     public targets: string[],
     public feed: FeedData,
-    public page: PageData,
+    public pages: PageData[],
     public comic: ComicData,
   ) {}
 
@@ -51,7 +51,7 @@ export class Notifier {
       return webhookUpdated < data.feed.dateUpdated
     })
 
-    return new Notifier(targets, data.feed, data.page, comic)
+    return new Notifier(targets, data.feed, data.pages, comic)
   }
 
   protected updateCachedDate(url: string): Promise<void> {
@@ -60,29 +60,60 @@ export class Notifier {
 
   /**
    * Notify the configured Discord webhook URLs of any updates, if needed.
+   * @param embeds - Discord API embeds to send. Generated if omitted.
    */
-  async send() {
+  async send(embeds?: APIEmbed[]) {
     if (!this.targets.length) {
       console.log(new NotifierError(this.comic, "no webhooks to send").message)
       return
     }
-    await this.sendUpdates(this.embeds)
+    await this.sendUpdates(embeds ?? this.embeds)
   }
 
   /**
    * Generate Discord webhook embeds.
    */
   get embeds(): APIEmbed[] {
+    let pageNumber = 1
+
+    const embeds: APIEmbed[] = []
+    for (const page of this.pages) {
+      embeds.push(
+        ...Notifier.embedsFromPage(page, {
+          // If this is the first page, add comic info.
+          ...(pageNumber === 1
+            ? {
+                title: this.feed.pageName,
+                author: { name: this.feed.feedName },
+                url: this.feed.pageLink,
+              }
+            : {}),
+          // If there are multiple pages, add page numbers.
+          ...(this.pages.length > 1
+            ? { description: `Page ${pageNumber}` }
+            : {}),
+        }),
+      )
+      pageNumber++
+    }
+    return embeds
+  }
+
+  /**
+   * Generate a Discord webhook embed from a {@link Page}.
+   * @param page - the page data to use.
+   * @param extraEmbedData - extra API embed properties to include in the first
+   * embed.
+   */
+  static embedsFromPage(
+    page: PageData,
+    extraEmbedData?: Omit<APIEmbed, "image">,
+  ): APIEmbed[] {
     return [
-      {
-        title: this.feed.pageName,
-        author: { name: this.feed.feedName },
-        image: { url: this.page.imageUri },
-        url: this.feed.pageLink,
-      },
+      { ...extraEmbedData, image: { url: page.imageUri } },
       // Only include alt-text embed if there's alt-text.
-      ...(this.page.altText
-        ? [{ description: `Alt text: ||${this.page.altText}||` }]
+      ...(page.altText
+        ? [{ description: `Alt text: ||${page.altText}||` }]
         : []),
     ]
   }

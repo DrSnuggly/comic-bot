@@ -24,7 +24,7 @@ it("should match properties from data", () => {
   expect(comic).toMatchObject(testComicData)
 })
 
-it("should resolve when processing", async () => {
+it("should resolve when processing single pages", async () => {
   const comic = new Comic(comicData)
 
   const feedAsset = await fetchAsset("comic-feeds/standard.xml")
@@ -35,6 +35,32 @@ it("should resolve when processing", async () => {
   mockPool
     .intercept({ path: comicUrl.pathname })
     .reply(200, await pageAsset.text())
+  for (const webhook of comicData.webhooks) {
+    mockPool.intercept({ path: webhook, method: "post" }).reply(200)
+  }
+
+  await expect(comic.process(rewriter)).resolves.toBe(undefined)
+})
+
+it("should resolve when processing multiple pages", async () => {
+  const comic = new Comic({ ...comicData, nextPageSelector: "a.next" })
+
+  const feedAsset = await fetchAsset("comic-feeds/standard.xml")
+  const startPageAsset = await fetchAsset("comic-pages/next-page-start.html")
+  const nextPageAsset = await fetchAsset("comic-pages/next-page-next.html")
+  const endPageAsset = await fetchAsset("comic-pages/next-page-end.html")
+  mockPool
+    .intercept({ path: feedUrl.pathname })
+    .reply(200, await feedAsset.text())
+  mockPool
+    .intercept({ path: comicUrl.pathname })
+    .reply(200, await startPageAsset.text())
+  mockPool
+    .intercept({ path: `${comicUrl.pathname}/next` })
+    .reply(200, await nextPageAsset.text())
+  mockPool
+    .intercept({ path: `${comicUrl.pathname}/end` })
+    .reply(200, await endPageAsset.text())
   for (const webhook of comicData.webhooks) {
     mockPool.intercept({ path: webhook, method: "post" }).reply(200)
   }

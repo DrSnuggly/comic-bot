@@ -9,54 +9,38 @@ exports[`parsing > should parse: 'inline-alt-text.html' 1`] = `
 
 exports[`parsing > should parse: 'inline-nullish-alt-text.html' 1`] = `
 {
-  "altText": undefined,
   "imageUri": "https://localhost/image.png",
+}
+`;
+
+exports[`parsing > should parse: 'next-page-end.html' 1`] = `
+{
+  "altText": "Alt text end.",
+  "imageUri": "https://localhost/image-end.png",
+}
+`;
+
+exports[`parsing > should parse: 'next-page-start.html' 1`] = `
+{
+  "altText": "Alt text start.",
+  "imageUri": "https://localhost/image-start.png",
+  "nextPageUrl": "https://localhost/comic/next",
 }
 `;
 
 exports[`parsing > should parse: 'no-alt-text.html' 1`] = `
 {
-  "altText": undefined,
   "imageUri": "https://localhost/image.png",
 }
 `;
 
 exports[`parsing > should parse: 'no-alt-text.html' 2`] = `
 {
-  "altText": undefined,
   "imageUri": "https://localhost/image.png",
 }
 `;
 
 exports[`parsing > should parse: 'separate-alt-text.html' 1`] = `
-{
-  "altText": "Alt text.",
-  "imageUri": "https://localhost/image.png",
-}
-`;
-
-exports[`should parse: 'inline-alt-text.html' 1`] = `
-{
-  "altText": "Alt text.",
-  "imageUri": "https://localhost/image.png",
-}
-`;
-
-exports[`should parse: 'no-alt-text.html' 1`] = `
-{
-  "altText": undefined,
-  "imageUri": "https://localhost/image.png",
-}
-`;
-
-exports[`should parse: 'no-alt-text.html' 2`] = `
-{
-  "altText": undefined,
-  "imageUri": "https://localhost/image.png",
-}
-`;
-
-exports[`should parse: 'separate-alt-text.html' 1`] = `
 {
   "altText": "Alt text.",
   "imageUri": "https://localhost/image.png",
