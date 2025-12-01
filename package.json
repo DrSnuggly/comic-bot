@@ -13,6 +13,7 @@
     "start": "wrangler dev --test-scheduled",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage.enabled true",
+    "test:e2e": "TEST_E2E=true vitest run",
     "typecheck": "tsc --build --clean",
     "typegen": "wrangler types"
   },
@@ -29,6 +30,7 @@
     "@vitest/coverage-istanbul": "^3.2.4",
     "discord-api-types": "^0.38.26",
     "domutils": "^3.2.2",
+    "dotenv": "^17.2.3",
     "type-fest": "^5.1.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",

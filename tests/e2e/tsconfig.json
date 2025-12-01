@@ -1,0 +1,11 @@
+{
+  "include": ["./globalSetup.ts", "**/*.json"],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "node20",
+    "moduleResolution": null,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["vitest/globals", "./env.d.ts"]
+  }
+}

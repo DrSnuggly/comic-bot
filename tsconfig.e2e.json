@@ -1,0 +1,14 @@
+{
+  "include": ["**/__tests__/**/*.e2e.*", "./tests/e2e"],
+  "exclude": ["./tests/e2e/globalSetup.ts"],
+  "references": [{ "path": "./tsconfig.src.json" }],
+  "extends": "./tsconfig.test.json",
+  "compilerOptions": {
+    "types": [
+      "@cloudflare/vitest-pool-workers",
+      "vitest/globals",
+      "./worker-configuration.d.ts",
+      "./tests/env.d.ts"
+    ]
+  }
+}
