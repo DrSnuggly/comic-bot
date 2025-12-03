@@ -1,10 +1,9 @@
 {
-  "include": ["**/__tests__", "tests"],
+  "include": ["**/__tests__", "./tests"],
   "exclude": ["./tests/e2e", "**/*.e2e.*"],
   "references": [{ "path": "./tsconfig.src.json" }],
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "types": [
       "@cloudflare/vitest-pool-workers",
       "vitest/globals",
