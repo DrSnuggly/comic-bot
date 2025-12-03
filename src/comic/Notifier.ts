@@ -110,11 +110,14 @@ export class Notifier {
     extraEmbedData?: Omit<APIEmbed, "image">,
   ): APIEmbed[] {
     return [
-      { ...extraEmbedData, image: { url: page.imageUri } },
-      // Only include alt-text embed if there's alt-text.
-      ...(page.altText
-        ? [{ description: `Alt text: ||${page.altText}||` }]
-        : []),
+      {
+        ...extraEmbedData,
+        image: { url: page.imageUri },
+        // Only include alt-text footer if there's alt-text.
+        ...(page.altText
+          ? { footer: { text: page.altText, icon_url: env.DISCORD_FOOTER_URL } }
+          : {}),
+      },
     ]
   }
 
