@@ -1,6 +1,7 @@
 import { decodeHTML } from "entities"
 import { z } from "zod"
 import type { ComicData } from "../schema"
+import { normalizeUrl } from "../utils/normalizeUrl"
 import { ComicError } from "./ComicError"
 
 const pageDataSchema = z.object({
@@ -11,6 +12,17 @@ const pageDataSchema = z.object({
 export type PageData = z.infer<typeof pageDataSchema>
 
 export class PageError extends ComicError {}
+
+/**
+ * Normalize input into the expected value.
+ * @param input - the input to normalize.
+ */
+function normalizeAltText(input: unknown): string | undefined {
+  if (!input || typeof input !== "string") return undefined
+  const parsed = decodeHTML(input).trim()
+  if (!parsed) return undefined
+  return parsed
+}
 
 /**
  * Content handler for {@link HTMLRewriter}.
@@ -77,19 +89,19 @@ export class Page implements PageData {
         // Get comic image, if not already found.
         if (rawData.imageUri === undefined) {
           const src = element.getAttribute("src")
-          if (src) rawData.imageUri = src
+          if (src) rawData.imageUri = normalizeUrl(src, response.url)
         }
 
         // Get comic alt text, if not already found.
         if (rawData.altText === undefined) {
-          const title = Page.normalizeAltText(element.getAttribute("title"))
+          const title = normalizeAltText(element.getAttribute("title"))
           if (title !== undefined) rawData.altText = title
         }
       },
       text(element) {
         // Get comic alt text, if not already found.
         if (rawData.altText === undefined) {
-          const text = Page.normalizeAltText(element.text)
+          const text = normalizeAltText(element.text)
           if (text !== undefined) rawData.altText = text
         }
       },
@@ -106,15 +118,7 @@ export class Page implements PageData {
 
           const href = element.getAttribute("href")
           if (href) {
-            if (href.startsWith("http")) {
-              rawData.nextPageUrl = href
-              return
-            }
-
-            const origin = new URL(response.url).origin
-            // TODO: make this more robust when handling un-prefixed paths.
-            const path = href.startsWith("/") ? href : `/${href}`
-            rawData.nextPageUrl = origin + path
+            rawData.nextPageUrl = normalizeUrl(href, response.url)
           }
         },
       })
@@ -130,16 +134,5 @@ export class Page implements PageData {
     }
 
     return new Page(result.data, comic, rewriter)
-  }
-
-  /**
-   * Normalize input into the expected value.
-   * @param input - the input to normalize.
-   */
-  static normalizeAltText(input: unknown): string | undefined {
-    if (!input || typeof input !== "string") return undefined
-    const parsed = decodeHTML(input).trim()
-    if (!parsed) return undefined
-    return parsed
   }
 }
