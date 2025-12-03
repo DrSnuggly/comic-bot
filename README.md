@@ -95,6 +95,17 @@ An example JSON file can be found here: [
    pnpm install --frozen-lockfile
    ```
 
+### End-to-end tests
+
+1. Create a `.env` file in the root of your project with the following info:
+   ```dotenv
+   WEBHOOK="<your Discord channel's webhook URL>"
+   ```
+2. Run the following command:
+   ```console
+   pnpm run tests:e2e
+   ```
+
 ## Reference
 
 - [Cloudflare Workers's
