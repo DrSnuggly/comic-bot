@@ -19,6 +19,9 @@ can [sign up for one for free](https://dash.cloudflare.com/sign-up).
 
 ## Configure
 
+An example JSON file can be found here: [
+`tests/e2e/comics.json`](tests/e2e/comics.json).
+
 1. Using your favourite text editor, build a JSON file with the following
    format:
    ```json5
@@ -47,6 +50,9 @@ can [sign up for one for free](https://dash.cloudflare.com/sign-up).
     - `imageSelector`: the CSS selector for the comic image.
     - `altTextSelector` (optional): if alt text isn't present on the comic img
       element, you can provide the CSS selector for any alt text.
+    - `nextPageSelector` (optional): the CSS selector for the link to the next
+      comic page — this allows all pages from a multipage update to be
+      retrieved.
 2. Remove all comments and unnecessary trailing commas:
     - Before:
       ```json5
