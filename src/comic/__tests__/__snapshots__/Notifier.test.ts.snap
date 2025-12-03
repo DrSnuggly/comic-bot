@@ -6,14 +6,15 @@ exports[`embeds > should include alt-text embed if present 1`] = `
     "author": {
       "name": "Comic Title",
     },
+    "footer": {
+      "icon_url": "https://static.yeagers.co/comic-bot/alt-text.png",
+      "text": "Alt text.",
+    },
     "image": {
       "url": "https://localhost/image.png",
     },
     "title": "Comic 1",
     "url": "https://localhost/comic",
-  },
-  {
-    "description": "Alt text: ||Alt text.||",
   },
 ]
 `;
@@ -25,6 +26,10 @@ exports[`embeds > should include embeds from multiple pages 1`] = `
       "name": "Comic Title",
     },
     "description": "Page 1",
+    "footer": {
+      "icon_url": "https://static.yeagers.co/comic-bot/alt-text.png",
+      "text": "Alt text start.",
+    },
     "image": {
       "url": "https://localhost/image-start.png",
     },
@@ -32,25 +37,24 @@ exports[`embeds > should include embeds from multiple pages 1`] = `
     "url": "https://localhost/comic",
   },
   {
-    "description": "Alt text: ||Alt text start.||",
-  },
-  {
     "description": "Page 2",
+    "footer": {
+      "icon_url": "https://static.yeagers.co/comic-bot/alt-text.png",
+      "text": "Alt text next.",
+    },
     "image": {
       "url": "https://localhost/image-next.png",
     },
   },
   {
-    "description": "Alt text: ||Alt text next.||",
-  },
-  {
     "description": "Page 3",
+    "footer": {
+      "icon_url": "https://static.yeagers.co/comic-bot/alt-text.png",
+      "text": "Alt text end.",
+    },
     "image": {
       "url": "https://localhost/image-end.png",
     },
-  },
-  {
-    "description": "Alt text: ||Alt text end.||",
   },
 ]
 `;

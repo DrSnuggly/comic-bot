@@ -56,7 +56,8 @@
    */
   "vars": {
     "DISCORD_USERNAME": "Comic Bot",
-    "DISCORD_AVATAR_URL": "https://static.yeagers.co/comic-bot/avatar.png"
+    "DISCORD_AVATAR_URL": "https://static.yeagers.co/comic-bot/avatar.png",
+    "DISCORD_FOOTER_URL": "https://static.yeagers.co/comic-bot/alt-text.png"
   }
   /**
    * Note: Use secrets to store sensitive data.

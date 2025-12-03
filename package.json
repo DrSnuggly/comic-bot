@@ -15,7 +15,7 @@
     "test:coverage": "vitest run --coverage.enabled true",
     "test:e2e": "TEST_E2E=true vitest run",
     "typecheck": "tsc --build --clean",
-    "typegen": "wrangler types"
+    "typegen": "wrangler types --env-file .env.typegen"
   },
   "packageManager": "pnpm@10.18.3",
   "dependencies": {
