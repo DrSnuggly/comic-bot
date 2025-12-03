@@ -2,7 +2,7 @@ import { env, fetchMock, type Interceptable } from "cloudflare:test"
 import { comicData, comicUrl, origin } from "@tests/utils/constants"
 import { fetchAsset } from "@tests/utils/fetchAsset"
 import type { ComicData } from "../../schema"
-import { Page, type PageData, PageError } from "../Page"
+import { Page, PageError } from "../Page"
 
 let rewriter: HTMLRewriter
 let mockPool: Interceptable
@@ -39,7 +39,9 @@ describe("parsing", () => {
     { pageAsset: "no-alt-text.html" },
     { pageAsset: "no-alt-text.html", altTextSelector: "#does-not-exist" },
     { pageAsset: "separate-alt-text.html", altTextSelector: "#alt-text" },
-  ] satisfies (Pick<ComicData, "altTextSelector"> & { pageAsset: string })[])(
+    { pageAsset: "next-page-start.html", nextPageSelector: "a.next" },
+    { pageAsset: "next-page-end.html", nextPageSelector: "a.next" },
+  ] satisfies (Partial<ComicData> & { pageAsset: string })[])(
     "should parse: $pageAsset",
     async ({ pageAsset, ...rest }) => {
       const assetPath = `comic-pages/${pageAsset}`
@@ -47,7 +49,7 @@ describe("parsing", () => {
 
       const asset = await env.ASSETS.fetch(`${origin}/${assetPath}`)
       const pagePromise = Page.fromResponse(asset, testComic, rewriter).then(
-        ({ imageUri, altText }) => ({ imageUri, altText }) satisfies PageData,
+        ({ data }) => data,
       )
 
       await expect(pagePromise).resolves.toMatchSnapshot()

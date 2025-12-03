@@ -14,6 +14,9 @@ export class Comic implements ComicData {
   get altTextSelector() {
     return this.data.altTextSelector
   }
+  get nextPageSelector() {
+    return this.data.nextPageSelector
+  }
   get feedUrl() {
     return this.data.feedUrl
   }
@@ -39,8 +42,16 @@ export class Comic implements ComicData {
    */
   async process(rewriter: HTMLRewriter): Promise<void> {
     const feed = await Feed.fromComic(this)
-    const page = await Page.fromUrl(feed.pageLink, this, rewriter)
-    const notifier = await Notifier.fromData({ feed, page }, this)
+
+    let page = await Page.fromUrl(feed.pageLink, this, rewriter)
+    const pages = [page]
+    while (page.nextPageUrl !== undefined) {
+      // biome-ignore lint/performance/noAwaitInLoops: no way to parallelize.
+      page = await Page.fromUrl(page.nextPageUrl, this, rewriter)
+      pages.push(page)
+    }
+
+    const notifier = await Notifier.fromData({ feed, pages }, this)
     await notifier.send()
   }
 }

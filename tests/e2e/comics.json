@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Oglaf!",
+    "feedUrl": "https://www.oglaf.com/feeds/rss/",
+    "imageSelector": "img#strip",
+    "nextPageSelector": "a[rel=\"next\"]",
+    "webhooks": []
+  },
+  {
+    "name": "xkcd",
+    "feedUrl": "https://xkcd.com/rss.xml",
+    "imageSelector": "#comic img",
+    "webhooks": []
+  }
+]

@@ -10,6 +10,7 @@ export const comicDataSchema = z.object({
   webhooks: z.url().array(),
   imageSelector: z.string().min(1),
   altTextSelector: z.string().min(1).optional(),
+  nextPageSelector: z.string().min(1).optional(),
 })
 export type ComicData = z.infer<typeof comicDataSchema>
 

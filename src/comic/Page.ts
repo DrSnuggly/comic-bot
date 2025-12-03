@@ -1,11 +1,14 @@
 import { decodeHTML } from "entities"
+import { z } from "zod"
 import type { ComicData } from "../schema"
 import { ComicError } from "./ComicError"
 
-export type PageData = {
-  imageUri: string
-  altText?: string | undefined
-}
+const pageDataSchema = z.object({
+  imageUri: z.string().min(1),
+  altText: z.string().min(1).optional().catch(undefined),
+  nextPageUrl: z.url().optional().catch(undefined),
+})
+export type PageData = z.infer<typeof pageDataSchema>
 
 export class PageError extends ComicError {}
 
@@ -13,22 +16,26 @@ export class PageError extends ComicError {}
  * Content handler for {@link HTMLRewriter}.
  */
 export class Page implements PageData {
-  imageUri: string
-  altText: string | undefined
+  get imageUri() {
+    return this.data.imageUri
+  }
+  get altText() {
+    return this.data.altText
+  }
+  get nextPageUrl() {
+    return this.data.nextPageUrl
+  }
 
   /**
+   * @param data - the parsed page data.
    * @param comic - the target comic.
    * @param rewriter - the instantiated {@link HTMLRewriter} object.
-   * @param data - the parsed page data.
    */
-  protected constructor(
+  constructor(
+    public data: PageData,
     public comic: ComicData,
     protected rewriter: HTMLRewriter,
-    data: PageData,
-  ) {
-    this.imageUri = data.imageUri
-    this.altText = data.altText
-  }
+  ) {}
 
   /**
    * Fetch and parse the comic.
@@ -64,27 +71,26 @@ export class Page implements PageData {
       )
     }
 
-    let imageUri: string | undefined
-    let altText: string | undefined
+    const rawData: Partial<PageData> = {}
     const handler: HTMLRewriterElementContentHandlers = {
       element(element) {
         // Get comic image, if not already found.
-        if (imageUri === undefined) {
+        if (rawData.imageUri === undefined) {
           const src = element.getAttribute("src")
-          if (src) imageUri = src
+          if (src) rawData.imageUri = src
         }
 
         // Get comic alt text, if not already found.
-        if (altText === undefined) {
+        if (rawData.altText === undefined) {
           const title = Page.normalizeAltText(element.getAttribute("title"))
-          if (title !== undefined) altText = title
+          if (title !== undefined) rawData.altText = title
         }
       },
       text(element) {
         // Get comic alt text, if not already found.
-        if (altText === undefined) {
+        if (rawData.altText === undefined) {
           const text = Page.normalizeAltText(element.text)
-          if (text !== undefined) altText = text
+          if (text !== undefined) rawData.altText = text
         }
       },
     }
@@ -93,12 +99,37 @@ export class Page implements PageData {
     if (comic.altTextSelector) {
       parser = parser.on(comic.altTextSelector, handler)
     }
-    await parser.transform(response).text()
-    if (imageUri === undefined) {
-      throw new PageError(comic, "could not find image URI")
+    if (comic.nextPageSelector) {
+      parser = parser.on(comic.nextPageSelector, {
+        element(element) {
+          if (rawData.nextPageUrl !== undefined) return
+
+          const href = element.getAttribute("href")
+          if (href) {
+            if (href.startsWith("http")) {
+              rawData.nextPageUrl = href
+              return
+            }
+
+            const origin = new URL(response.url).origin
+            // TODO: make this more robust when handling un-prefixed paths.
+            const path = href.startsWith("/") ? href : `/${href}`
+            rawData.nextPageUrl = origin + path
+          }
+        },
+      })
     }
 
-    return new Page(comic, rewriter, { imageUri, altText })
+    await parser.transform(response).text()
+    const result = pageDataSchema.safeParse(rawData)
+    if (!result.success) {
+      throw new PageError(
+        comic,
+        `error parsing page: ${z.prettifyError(result.error)}`,
+      )
+    }
+
+    return new Page(result.data, comic, rewriter)
   }
 
   /**

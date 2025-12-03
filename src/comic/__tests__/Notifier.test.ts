@@ -2,6 +2,7 @@ import { fetchMock, type Interceptable } from "cloudflare:test"
 import { comicData, origin } from "@tests/utils/constants"
 import { fetchAsset } from "@tests/utils/fetchAsset"
 import { getCachedDates } from "@tests/utils/getCachedDates"
+import { beforeAll } from "vitest"
 import type { ComicData } from "../../schema"
 import { updateCachedDate } from "../../utils/updateCachedDate"
 import { Feed, type FeedData } from "../Feed"
@@ -31,7 +32,7 @@ beforeAll(async () => {
     comicData,
     rewriter,
   )
-  data = { feed, page }
+  data = { feed, pages: [page] }
 })
 beforeEach(() => {
   vi.useFakeTimers()
@@ -110,14 +111,42 @@ describe("targeting", () => {
 
 describe("embeds", () => {
   it("should include alt-text embed if present", () => {
-    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, [page], comicData)
 
     expect(notifier.embeds).toMatchSnapshot()
   })
 
   it("should not include alt-text embed if missing", () => {
     const testPage: PageData = { imageUri: page.imageUri }
-    const notifier = new Notifier(comicData.webhooks, feed, testPage, comicData)
+    const notifier = new Notifier(
+      comicData.webhooks,
+      feed,
+      [testPage],
+      comicData,
+    )
+
+    expect(notifier.embeds).toMatchSnapshot()
+  })
+
+  it("should include embeds from multiple pages", async () => {
+    const pages = [
+      await Page.fromResponse(
+        await fetchAsset("comic-pages/next-page-start.html"),
+        comicData,
+        rewriter,
+      ),
+      await Page.fromResponse(
+        await fetchAsset("comic-pages/next-page-next.html"),
+        comicData,
+        rewriter,
+      ),
+      await Page.fromResponse(
+        await fetchAsset("comic-pages/next-page-end.html"),
+        comicData,
+        rewriter,
+      ),
+    ]
+    const notifier = new Notifier(comicData.webhooks, feed, pages, comicData)
 
     expect(notifier.embeds).toMatchSnapshot()
   })
@@ -125,7 +154,7 @@ describe("embeds", () => {
 
 describe("sending", () => {
   it("should send embeds as body", async () => {
-    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, [page], comicData)
     const embeds = notifier.embeds
 
     for (const webhook of comicData.webhooks) {
@@ -141,12 +170,12 @@ describe("sending", () => {
         .reply(200)
     }
 
-    await expect(notifier.send()).resolves.toBe(undefined)
+    await expect(notifier.send(embeds)).resolves.toBe(undefined)
   })
 
   it("should only send to targets", async () => {
     const toTarget = [comicData.webhooks[0], comicData.webhooks[2]]
-    const notifier = new Notifier(toTarget, feed, page, comicData)
+    const notifier = new Notifier(toTarget, feed, [page], comicData)
 
     for (const webhook of toTarget) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(200)
@@ -156,7 +185,7 @@ describe("sending", () => {
   })
 
   it("should update cached dates", async () => {
-    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, [page], comicData)
 
     for (const webhook of comicData.webhooks) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(200)
@@ -171,7 +200,7 @@ describe("sending", () => {
   })
 
   it("should re-throw request failures", async () => {
-    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, [page], comicData)
 
     for (const webhook of comicData.webhooks) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(400)
@@ -185,7 +214,7 @@ describe("sending", () => {
   it("should only update cached dates if request is ok", async () => {
     const toSucceed = [comicData.webhooks[0], comicData.webhooks[2]]
     const toFail = [comicData.webhooks[1]]
-    const notifier = new Notifier(comicData.webhooks, feed, page, comicData)
+    const notifier = new Notifier(comicData.webhooks, feed, [page], comicData)
 
     for (const webhook of toSucceed) {
       mockPool.intercept({ path: webhook, method: "post" }).reply(200)
@@ -205,7 +234,7 @@ describe("sending", () => {
   })
 
   it("should do nothing if no targets", async () => {
-    const notifier = new Notifier([], feed, page, comicData)
+    const notifier = new Notifier([], feed, [page], comicData)
     const consoleSpy = vi.spyOn(console, "log").mockImplementationOnce(() => {})
 
     await expect(notifier.send()).resolves.toBe(undefined)
