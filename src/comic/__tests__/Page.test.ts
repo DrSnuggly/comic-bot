@@ -2,7 +2,7 @@ import { env, fetchMock, type Interceptable } from "cloudflare:test"
 import { comicData, comicUrl, origin } from "@tests/utils/constants"
 import { fetchAsset } from "@tests/utils/fetchAsset"
 import type { ComicData } from "../../schema"
-import { Page, type PageData, PageError } from "../Page"
+import { Page, PageError } from "../Page"
 
 let rewriter: HTMLRewriter
 let mockPool: Interceptable
