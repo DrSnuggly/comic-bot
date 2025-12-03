@@ -94,8 +94,9 @@ An example JSON file can be found here: [
    ```shell
    pnpm install --frozen-lockfile
    ```
-   
+
 ## Reference
 
-- [Cloudflare Workers's `scheduled()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/)
+- [Cloudflare Workers's
+  `scheduled()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/)
 - [Cloudflare Workers and Vite](https://developers.cloudflare.com/workers/vite-plugin/)
